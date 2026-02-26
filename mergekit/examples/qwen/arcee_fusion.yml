@@ -1,0 +1,6 @@
+models:
+  - model: Qwen/Qwen2.5-7B-Instruct
+  - model: Alelcv27/Qwen2.5-7B-Math-CoT
+merge_method: arcee_fusion
+base_model: Alelcv27/Qwen2.5-7B-Math-CoT
+dtype: bfloat16

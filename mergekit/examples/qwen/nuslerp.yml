@@ -1,0 +1,10 @@
+base_model: Qwen/Qwen2.5-7B-Instruct
+models:
+  - model: Alelcv27/Qwen2.5-7B-Math-CoT
+    parameters:
+      weight: 0.5
+  - model: Alelcv27/Qwen2.5-7B-Code-v2
+    parameters:
+      weight: 0.5
+merge_method: nuslerp
+dtype: float16

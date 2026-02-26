@@ -1,0 +1,9 @@
+slices:
+  - sources:
+    - model: Alelcv27/llama3-1b-code-dpo
+      layer_range: [0, 16]
+  - sources:
+    - model: Alelcv27/llama3-1b-math-dpo
+      layer_range: [0, 16]
+merge_method: passthrough
+dtype: float16

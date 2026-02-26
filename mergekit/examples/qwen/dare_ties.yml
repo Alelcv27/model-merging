@@ -1,0 +1,14 @@
+models:
+  - model: Alelcv27/Qwen2.5-7B-Math-CoT
+    parameters:
+      density: 0.8
+      weight: 0.7
+  - model: Alelcv27/Qwen2.5-7B-Code-v2
+    parameters:
+      density: 0.6
+      weight: 0.5
+merge_method: dare_ties
+base_model: Qwen/Qwen2.5-7B-Instruct
+parameters:
+  normalize: true
+dtype: float16

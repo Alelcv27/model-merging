@@ -1,0 +1,6 @@
+models:
+  - model: Alelcv27/Qwen2.5-7B-Math-CoT
+  - model: Alelcv27/Qwen2.5-7B-Code-v2
+merge_method: model_stock
+base_model: Qwen/Qwen2.5-7B-Instruct
+dtype: bfloat16

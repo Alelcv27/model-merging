@@ -1,0 +1,11 @@
+slices:
+  - sources:
+      - model: Alelcv27/Qwen2.5-7B-Code-v2
+        layer_range: [0, 28]
+      - model: Alelcv27/Qwen2.5-7B-Math-CoT
+        layer_range: [0, 28]
+merge_method: nearswap
+base_model: Alelcv27/Qwen2.5-7B-Math-CoT
+parameters:
+  t: 0.7
+dtype: float16

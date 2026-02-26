@@ -1,0 +1,10 @@
+models:
+  - model: Alelcv27/Llama3.1-8B-Code
+    parameters:
+      weight: 0.5
+  - model: Alelcv27/Llama3.1-8B-Math-CoT
+    parameters:
+      weight: 0.5
+merge_method: dare_linear
+base_model: meta-llama/Llama-3.1-8B-Instruct
+dtype: float16

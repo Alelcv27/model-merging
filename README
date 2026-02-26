@@ -1,0 +1,173 @@
+# Model Merging for Multi-Task LLMs
+
+This project is about **building multi-task models via model merging**: train (or collect) specialist checkpoints, merge them into a single model, then validate performance across diverse tasks.
+
+Main experiments in this repo focus on a **Llama 3.1 8B-class base model** (with additional notebook variants included for comparison).
+
+Tools used:
+
+- **Unsloth** for training / fine-tuning (notebook workflow)
+- **MergeKit** for merging checkpoints (YAML strategies + notebook)
+- **EleutherAI lm-evaluation-harness** for evaluation (notebook + CLI)
+
+This repo is intentionally **notebook-first** and keeps the pipeline reproducible and inspectable.
+
+---
+
+## Repository layout
+
+- `llama3 notebooks/`
+  - `llama3-sft-alpaca.ipynb`
+  - `llama3-sft-cot.ipynb`
+  - `llama3-sft-dataset-merged.ipynb`
+- `qwen2.5 notebooks/`
+  - `qwen2-5-sft-alpaca.ipynb`
+  - `qwen2-5-sft-cot.ipynb`
+  - `qwen2-5-sft-dataset-merged.ipynb`
+- `mergekit/` (MergeKit source + examples)
+  - `notebook.ipynb` (merge demo)
+  - `examples/llama/*.yml`, `examples/qwen/*.yml` (merge strategy configs)
+- `lm-evaluation-harness/` (lm-eval source + docs)
+  - `eval.ipynb` (evaluation demo)
+
+---
+
+## Results (snapshot)
+
+See `lm-evaluation-harness/eval.ipynb` for the exact run output.
+
+One example run captured in `eval.ipynb` reports:
+
+- **HumanEval**: pass@1 = **0.6646**
+- **tinyGSM8K**: exact match = **0.8018**
+
+From the project report (`Progetto MergeKit.pdf`), the **Breadcrumbs** merge method is highlighted as the best-performing configuration in that analysis:
+
+- **HumanEval** = **0.5976**
+- **tinyGSM8K (exact match)** = **0.8243**
+
+Notes:
+
+- The small benchmark subset used here is meant for fast iteration and sanity-checking.
+- Numbers depend on the chosen base/specialist checkpoints, merge strategy, decoding settings, and library versions.
+- In the report analysis, merged models generally outperform sequential/double fine-tuning (e.g., Math → Code) when the goal is a single multi-task checkpoint.
+
+---
+
+## How to run (high level)
+
+This repo can be used in two ways:
+
+1) **Notebook workflow (recommended)**
+
+- Open the training notebooks under the provided notebook folders (e.g. `llama3 notebooks/`, `qwen2.5 notebooks/`) to produce specialist checkpoints.
+- Use `mergekit/notebook.ipynb` (or a YAML config in `mergekit/examples/`) to merge them.
+- Run `lm-evaluation-harness/eval.ipynb` to evaluate the resulting model.
+
+2) **CLI workflow (optional)**
+
+If you prefer command-line runs, both MergeKit and lm-eval provide CLIs. This README keeps the commands model-agnostic; use placeholders like:
+
+- `<MODEL_ID_OR_PATH>` (a local folder or a Hugging Face model id)
+- `<MERGE_CONFIG.yml>` (a MergeKit YAML config)
+- `<OUTPUT_DIR>`
+
+Examples of where to look for exact flags and options:
+
+- MergeKit: `mergekit/README.md`
+- lm-eval: `lm-evaluation-harness/README.md` and `lm-evaluation-harness/docs/interface.md`
+
+---
+
+## Training (Unsloth)
+
+Training is notebook-based and uses **Unsloth** for efficient fine-tuning.
+
+Specialist checkpoints in these experiments are trained using two task-specific datasets:
+
+- **Math specialist**: `nvidia/OpenMathReasoning` (reported ~5.7M math problems in CoT format)
+- **Code specialist**: `TokenBender/code_instructions_122k_alpaca_style` (reported ~120k programming exercises in Alpaca format)
+
+Suggested order for each notebook set:
+
+1. `*-sft-alpaca.ipynb` (instruction tuning)
+2. `*-sft-cot.ipynb` (chain-of-thought style tuning)
+3. `*-sft-dataset-merged.ipynb` (single SFT run on a merged dataset)
+
+Practical notes:
+
+- Unsloth training is typically easiest on **Linux/WSL2** or **Colab** with CUDA.
+- Set your Hugging Face token via env var (don’t hard-code it).
+
+Upstream Unsloth project: https://github.com/unslothai/unsloth
+
+---
+
+## Merging (MergeKit)
+
+This repo vendors MergeKit in `mergekit/` and includes YAML strategies in:
+
+- `mergekit/examples/llama/*.yml`
+- `mergekit/examples/qwen/*.yml`
+
+Merge strategies are stored as YAML configs under `mergekit/examples/`.
+
+Many merge methods exist (linear, slerp, ties, arcee_fusion, …). For details and trade-offs, see `mergekit/docs/merge_methods.md`.
+
+### Notebook
+
+- Run the merge in a notebook: `mergekit/notebook.ipynb`
+
+### CLI
+
+MergeKit’s main CLI entry point is `mergekit-yaml` (see `mergekit/README.md` for all flags).
+
+Minimal example (placeholders):
+
+```bash
+mergekit-yaml <MERGE_CONFIG.yml> <OUTPUT_DIR> [--cuda]
+```
+
+In this repo, example configs live under:
+
+- `mergekit/examples/llama/*.yml`
+- `mergekit/examples/qwen/*.yml`
+
+Upstream MergeKit tutorial/docs: https://github.com/arcee-ai/mergekit
+Local docs: `mergekit/README.md` and `mergekit/docs/merge_methods.md`
+
+---
+
+## Evaluation (lm-evaluation-harness)
+
+This repo vendors lm-eval in `lm-evaluation-harness/`.
+
+### Notebook
+
+- Run evaluation in a notebook: `lm-evaluation-harness/eval.ipynb`
+
+### CLI
+
+Minimal example (placeholders):
+
+```bash
+lm_eval --model hf --model_args pretrained=<MODEL_ID_OR_PATH> --tasks <TASKS> --batch_size <BATCH_SIZE>
+```
+
+Example task list used in this project’s evaluation notebook:
+
+- `humaneval,tinyBenchmarks`
+
+Upstream lm-eval tutorial/docs: https://github.com/EleutherAI/lm-evaluation-harness
+Local docs: `lm-evaluation-harness/README.md` and `lm-evaluation-harness/docs/interface.md`
+
+---
+
+## References (tutorials)
+
+- Unsloth: https://github.com/unslothai/unsloth
+- MergeKit (tutorial/docs): https://github.com/arcee-ai/mergekit
+- lm-evaluation-harness (tutorial/docs): https://github.com/EleutherAI/lm-evaluation-harness
+
+---
+

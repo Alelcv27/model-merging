@@ -1,0 +1,21 @@
+base_model: Qwen/Qwen2.5-7B-Instruct
+dtype: float16
+merge_method: breadcrumbs_ties
+parameters:
+  normalize: true
+slices:
+- sources:
+  - layer_range: [0, 28]
+    model: Alelcv27/Qwen2.5-7B-Code-v2
+    parameters:
+      weight: 0.7
+  - layer_range: [0, 28]
+    model: Alelcv27/Qwen2.5-7B-Math-CoT
+    parameters:
+      weight: 0.9
+  - layer_range: [0, 28]
+    model: Qwen/Qwen2.5-7B-Instruct
+parameters:
+  density: 0.9
+  gamma: 0.01
+  normalize: true

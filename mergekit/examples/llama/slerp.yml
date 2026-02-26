@@ -1,0 +1,11 @@
+slices:
+  - sources:
+      - model: Alelcv27/Llama3.1-8B-Code
+        layer_range: [0, 32]
+      - model: Alelcv27/Llama3.1-8B-Math-CoT
+        layer_range: [0, 32]
+merge_method: slerp
+base_model: Alelcv27/Llama3.1-8B-Math-CoT
+parameters:
+  t: 0.7
+dtype: float16

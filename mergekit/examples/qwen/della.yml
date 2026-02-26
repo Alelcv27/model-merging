@@ -1,0 +1,16 @@
+models:
+  - model: Alelcv27/Qwen2.5-7B-Math-CoT
+    parameters:
+      weight: 0.7
+      density: 0.8
+  - model: Alelcv27/Qwen2.5-7B-Code-v2
+    parameters:
+      weight: 0.5
+      density: 0.8
+merge_method: della
+base_model: Qwen/Qwen2.5-7B-Instruct
+parameters:
+  normalize: true
+  lambda: 1.0
+  epsilon: 0.1
+dtype: float16

@@ -1,0 +1,6 @@
+models:
+  - model: meta-llama/Llama-3.1-8B-Instruct
+  - model: Alelcv27/Llama3.1-8B-Math-CoT
+merge_method: arcee_fusion
+base_model: meta-llama/Llama-3.1-8B-Instruct
+dtype: bfloat16
