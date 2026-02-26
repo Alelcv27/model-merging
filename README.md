@@ -211,3 +211,5 @@ Local docs: `lm-evaluation-harness/README.md` and `lm-evaluation-harness/docs/in
 - lm-evaluation-harness (tutorial/docs): https://github.com/EleutherAI/lm-evaluation-harness
 
 ---
+
+Author: Alessandro La Cava
