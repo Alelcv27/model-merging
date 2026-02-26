@@ -24,15 +24,18 @@ This repo is intentionally **notebook-first** and keeps the pipeline reproducibl
   - `qwen2-5-sft-alpaca.ipynb`
   - `qwen2-5-sft-cot.ipynb`
   - `qwen2-5-sft-dataset-merged.ipynb`
-- `mergekit/` (MergeKit source + examples)
+- `examples/` (project-level MergeKit YAML configs)
+  - `examples/llama/*.yml`
+  - `examples/qwen/*.yml`
+  - Note: if you want to use these as “MergeKit examples”, copy them into `mergekit/examples/` after cloning MergeKit.
+- `mergekit/` (MergeKit source)
   - `notebook.ipynb` (merge demo)
-  - `examples/llama/*.yml`, `examples/qwen/*.yml` (merge strategy configs)
 - `lm-evaluation-harness/` (lm-eval source + docs)
   - `eval.ipynb` (evaluation demo)
 
 ---
 
-## Results (snapshot)
+## Results
 
 See `lm-evaluation-harness/eval.ipynb` for the exact run output.
 
@@ -54,17 +57,39 @@ Notes:
 
 ---
 
-## How to run (high level)
+## How to run
+
+### Set up MergeKit + lm-eval (clone into this project)
+
+This project expects these two upstream repos to exist as folders at the repo root:
+
+- `mergekit/`
+- `lm-evaluation-harness/`
+
+From the project root, clone them into the expected paths:
+
+```bash
+git clone https://github.com/arcee-ai/mergekit.git mergekit
+git clone https://github.com/EleutherAI/lm-evaluation-harness.git lm-evaluation-harness
+```
+
+To use the CLIs from this environment, install both projects into your Python environment (editable installs):
+
+```bash
+python -m pip install -U pip
+python -m pip install -e ./mergekit
+python -m pip install -e ./lm-evaluation-harness
+```
 
 This repo can be used in two ways:
 
-1) **Notebook workflow (recommended)**
+1) **Notebook workflow**
 
 - Open the training notebooks under the provided notebook folders (e.g. `llama3 notebooks/`, `qwen2.5 notebooks/`) to produce specialist checkpoints.
-- Use `mergekit/notebook.ipynb` (or a YAML config in `mergekit/examples/`) to merge them.
+- Use `mergekit/notebook.ipynb` (or one of the YAML configs under `examples/`) to merge them.
 - Run `lm-evaluation-harness/eval.ipynb` to evaluate the resulting model.
 
-2) **CLI workflow (optional)**
+2) **CLI workflow**
 
 If you prefer command-line runs, both MergeKit and lm-eval provide CLIs. This README keeps the commands model-agnostic; use placeholders like:
 
@@ -105,12 +130,28 @@ Upstream Unsloth project: https://github.com/unslothai/unsloth
 
 ## Merging (MergeKit)
 
-This repo vendors MergeKit in `mergekit/` and includes YAML strategies in:
+This repo expects MergeKit to be available under `mergekit/` (cloned or added as a submodule).
 
-- `mergekit/examples/llama/*.yml`
-- `mergekit/examples/qwen/*.yml`
+The merge strategy configs used by this project are stored at the project level under:
 
-Merge strategies are stored as YAML configs under `mergekit/examples/`.
+- `examples/llama/*.yml`
+- `examples/qwen/*.yml`
+
+These are *examples for this project*. If you want to use them inside the cloned MergeKit directory (i.e. under `mergekit/examples/`), copy them over:
+
+PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force .\mergekit\examples | Out-Null
+Copy-Item -Recurse -Force .\examples\* .\mergekit\examples\
+```
+
+bash:
+
+```bash
+mkdir -p mergekit/examples
+cp -r examples/* mergekit/examples/
+```
 
 Many merge methods exist (linear, slerp, ties, arcee_fusion, …). For details and trade-offs, see `mergekit/docs/merge_methods.md`.
 
@@ -130,8 +171,8 @@ mergekit-yaml <MERGE_CONFIG.yml> <OUTPUT_DIR> [--cuda]
 
 In this repo, example configs live under:
 
-- `mergekit/examples/llama/*.yml`
-- `mergekit/examples/qwen/*.yml`
+- `examples/llama/*.yml`
+- `examples/qwen/*.yml`
 
 Upstream MergeKit tutorial/docs: https://github.com/arcee-ai/mergekit
 Local docs: `mergekit/README.md` and `mergekit/docs/merge_methods.md`
@@ -140,7 +181,7 @@ Local docs: `mergekit/README.md` and `mergekit/docs/merge_methods.md`
 
 ## Evaluation (lm-evaluation-harness)
 
-This repo vendors lm-eval in `lm-evaluation-harness/`.
+This repo expects lm-eval to be available under `lm-evaluation-harness/` (cloned or added as a submodule).
 
 ### Notebook
 
