@@ -175,6 +175,7 @@ In this repo, example configs live under:
 - `examples/qwen/*.yml`
 
 Upstream MergeKit tutorial/docs: https://github.com/arcee-ai/mergekit
+
 Local docs: `mergekit/README.md` and `mergekit/docs/merge_methods.md`
 
 ---
@@ -200,6 +201,7 @@ Example task list used in this project’s evaluation notebook:
 - `humaneval,tinyBenchmarks`
 
 Upstream lm-eval tutorial/docs: https://github.com/EleutherAI/lm-evaluation-harness
+
 Local docs: `lm-evaluation-harness/README.md` and `lm-evaluation-harness/docs/interface.md`
 
 ---
