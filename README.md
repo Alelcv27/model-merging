@@ -119,13 +119,6 @@ Suggested order for each notebook set:
 2. `*-sft-cot.ipynb` (chain-of-thought style tuning)
 3. `*-sft-dataset-merged.ipynb` (single SFT run on a merged dataset)
 
-Practical notes:
-
-- Unsloth training is typically easiest on **Linux/WSL2** or **Colab** with CUDA.
-- Set your Hugging Face token via env var (don’t hard-code it).
-
-Upstream Unsloth project: https://github.com/unslothai/unsloth
-
 ---
 
 ## Merging (MergeKit)
@@ -174,10 +167,6 @@ In this repo, example configs live under:
 - `examples/llama/*.yml`
 - `examples/qwen/*.yml`
 
-Upstream MergeKit tutorial/docs: https://github.com/arcee-ai/mergekit
-
-Local docs: `mergekit/README.md` and `mergekit/docs/merge_methods.md`
-
 ---
 
 ## Evaluation (lm-evaluation-harness)
@@ -199,10 +188,6 @@ lm_eval --model hf --model_args pretrained=<MODEL_ID_OR_PATH> --tasks <TASKS> --
 Example task list used in this project’s evaluation notebook:
 
 - `humaneval,tinyBenchmarks`
-
-Upstream lm-eval tutorial/docs: https://github.com/EleutherAI/lm-evaluation-harness
-
-Local docs: `lm-evaluation-harness/README.md` and `lm-evaluation-harness/docs/interface.md`
 
 ---
 
